@@ -120,11 +120,17 @@ k_3 = \Delta t f(t_i + \Delta t/2, x_i + k_2/2) \\
 k_4 = \Delta t f(t_i + \Delta t, x_i + k3) $$
 
 These four derivatives constitute the next value in our propagation
-$$x_{i+1} = x_i + \frac{1}{6} (k_1 + 2(k_2+k_3) + k_4$$
+$$x_{i+1} = x_i + \frac{1}{6} (k_1 + 2(k_2+k_3) + k_4$$ 
+
+For the Runge-Kutta 4 scheme the local error in the approximation is $O([\Delta t]^3)$. \\
+
+To check the stability of our program for different time steps $\Delta t$ we made a program that runs over various values of $\Delta t$ and picks out the maximum radius in the Earth's orbit around the Sun. Giving the initial values for circular orbit this radius should yield $1 AU$. We wrote the $\Delta t$ values with the corresponding maximal radius to a file, and made a plot of this. \\
+
+In the case of circular orbit we also wanted to check that the kinetic and potential energy and the angular momentum are constants, as they should be. We then wrote functions which took in the needed values for the position, velocity and radius to compute the three wanted values. For each step in our propagation for the trajectories we printed these values to a file.  
 
 
 \subsection*{Results}
-When running our program for the two-body system of the Earth and the Sun and for the initial values we in theory predicted to be circular we found that our program lives up to our expectations. Figure somethingsomething.
+When running our program for the two-body system of the Earth and the Sun and for the initial values we in theory predicted to be circular we found that our program lives up to our expectations. Figure 3 shows the plot we got of the Earth's orbit around the Sun with the initial values for circular motion.
 
 \begin{figure}[h!]
   \centering
@@ -133,34 +139,70 @@ When running our program for the two-body system of the Earth and the Sun and fo
 \end{figure}
 
 
-Changing the initial velocity of the Earth....
-When we increase the initial velocity the orbit will be elliptical until we reach a high enough velocity for the world to escape it's orbit around the Sun. Figure ... we see the elliptical orbit.  
+When increasing the initial velocity the orbit will be elliptical, until we reach a high enough velocity for the Earth to escape it's orbit around the Sun. In figure 4 we see the elliptical orbit when using an initial velocity of $v = 2 \pi +1$. In figure 5 the initial velocity is increased to $v = 2 \pi + 2.3$, and we see that this is to great a speed for the gravitational force to keep the Earth in orbit. Hence, the Earth escapes the gravitational field of the Sun and continues to infinity.  
 
-\includegraphics[scale=0.5]{circular_orbit_1.png}
-\includegraphics[scale=0.5]{circular_orbit_2.png}
+\begin{figure}[h!]
+  \centering
+    	\includegraphics[scale=0.5]{circular_orbit_1.png}
+  \caption{\textit{Orbit of the Earth with a initial velocity of $v = 2 \pi +1$}}
+\end{figure}
 
-If instead we give a initial velocity "suitable" less then the initial velocity of the circular orbit, the Earth will be dragged towards the Sun. When it get passe close the force from the Sun on Earth will be to big for our program to handle, and thus it looks like the Earth is sent out and escapes the gravitational force working on it.     
+\begin{figure}[h!]
+  \centering
+    \includegraphics[scale=0.5]{circular_orbit_2.png}
+  \caption{\textit{Trajectory of the Earth with a initial velocity large enough to escape the gravitation field from the Sun}}
+\end{figure}
 
-\includegraphics[scale=0.5]{circular_orbit_3.png}
 
-Our algorithm is not stable for large timesteps either. When looking at the initial velocity that should give us circular motion, the program will not yield the wanted result if we don't choose the right timestep. Here for $N = 20, t_f = 2$ and the initial velocity for circular motion.  
-The Earth will move towards the Sun. Forces will get to large for our solver to manage --> distance Earth - Sun will go to infinity.
+An initial velocity close to, but less, than the initial velocity of circular orbit will, as for the one a bit larger, give elliptical orbit. However, if we decrease the velocity by a certain amount, the Earth will be dragged in elliptical spirals towards the Sun. The speed of which the Earth spirals towards the Sun will depend on the magnitude we decrease the initial velocity. If we run our program for a time limit so that the Earth gets very close to the Sun, the forces working will get to big for our program to handle. We will get a case of overflow, and thus it looks like the Earth is sent out from the Sun and escapes the gravitational force working on it (as seen in figure 6).   
+     
+\begin{figure}[h!]
+  \centering
+    \includegraphics[scale=0.5]{circular_orbit_3.png}
+  \caption{\textit{The low initial velocity causes the Earth to be dragged towards the Sun. When it gets close to the Sun it is sent out from the gravitational field}}
+\end{figure}
+
+
+When running for different time steps we found that our algorithm highly depends on the choice of step. For instance, when looking at the initial velocity that should give us circular motion, the program will not yield the wanted result if we do not choose the right time step. Here, in figure 7, for $N = 20, t_f = 2$ and the initial conditions that should yield circular motion.
+  
+\begin{figure}[h!]
+  \centering
+   	 \includegraphics[scale=0.5]{timesteps_circular.png}
+  \caption{\textit{Unstable algorithm for large time step}}
+\end{figure}
+
+From figure 8 and 9 we see the maximal radius in our orbit for different choice of $\Delta t$. The analytical value for the radius is the distance at circular orbit, $1 AU$. We see that the algorithm is very unstable for too large time steps.
+
+\begin{figure}[h!]
+  \centering
+   	 \includegraphics[scale=0.5]{timesteps_stability.png}
+  \caption{\textit{Plot over various time steps and the maximal radius}}
+\end{figure}
  
-\includegraphics[scale=0.5]{timesteps_circular.png}
+\begin{figure}[h!]
+  \centering
+   	 \includegraphics[scale=0.5]{timestep_stability3.png}
+  \caption{\textit{Plot over various time steps and the maximal radius}}
+\end{figure}
 
-\includegraphics[scale=0.5]{timesteps_stability.png}
+\begin{figure}[h!]
+  \centering
+   	 \includegraphics[scale=0.5]{timesteps_stability2.png}
+  \caption{\textit{Unstable algorithm for too large time step}}
+\end{figure}
 
-\includegraphics[scale=0.5]{timesteps_stability2.png}
 
-\includegraphics[scale=0.5]{timestep_stability3.png}
+In the case of circular orbit we wanted to test that the kinetic and potential energy and the angular momentum are constants. Printing out the values for these three quantities we found that they all were constants, as they should be.
+
+\begin{figure}[h!]
+  \centering
+   	 \includegraphics[scale=0.5]{energi.png}
+  \caption{\textit{List of kinetic and potential energy and angular momentum for different time steps}}
+\end{figure}
 
 
-Smaller values of delta t give smaller errors (if we ignore the possibility of round-off errors), but reducing delta t leads to a greater computational cost.
-Adaptive methods
-In case the function to integrate varies slowly or fast in different integration domains,
-adaptive methods are normally used. One strategy is always to decrease the step size.
-As we have seen earlier, this leads to more CPU cycles and may lead to loss or
-numerical precision. An alternative is to use higher-order RK methods for example.
-However, this leads again to more cycles, furthermore, there is no guarantee that
-higher-order leads to an improved error
+\subsection{Conclusion}
+
+We have seen during this project that the solver we have used to solve the differential equations is quite unstable for the wrong choice of time step, $\Delta t$, and highly dependent of the given initial values. Smaller values of $\Delta t$ gives smaller errors (if we ignore the possibility of round-off errors), but reducing $\delta t$ also leads to a greater computational cost. However, our program was not very time consuming, so this is a cost we could live with in this case. The stability of our solver will also depend on how slowly or fast the function to integrate varies. In the case of great variance our approximation will not be very good. One strategy is to decrease the step size, and thus get a interval with less variance. This, again, leads to more cycles and may lead to loss of numerical precision. An alternative could be to use higher-order RK methods, where you evaluate the slope at more points. This leads again to more cycles, and there is no guarantee for an improved error.   
+
 \end{document}    
